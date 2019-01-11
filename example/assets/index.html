@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+	<div id="time"></div>
+	<div id="message"></div>
+	<button id="btn-postmessage">Post Message</button>
+	<br>
+	<button id="btn-back">Back</button>
+  <br>
+  <button id="btn-go">Go</button>
+</body>
+
+<script>
+
+	var time = document.getElementById('time');
+
+	setInterval(function () {
+		time.innerHTML = Date.now();
+	}, 1000);
+
+	setTimeout(function () {
+		window.postMessage(JSON.stringify({ a: "hello from web" }), '*')
+	}, 1000);
+
+	document.addEventListener('message', function (event) {
+		document.getElementById('message').innerText = event.data;
+	});
+
+	function test(data) {
+		return data || 'hello stack';
+	}
+
+	document.getElementById('btn-postmessage').onclick = function () {
+		window.postMessage(JSON.stringify({ updateTitle: "hello post message" }), '*')
+	};
+
+	document.getElementById('btn-back').onclick = function () {
+		window.postMessage(JSON.stringify({ back: "hello post message" }), '*')
+	};
+
+	document.getElementById('btn-go').onclick = function () {
+		window.postMessage(JSON.stringify({ go: "hello post message" }), '*')
+	};
+
+</script>
+
+</html>

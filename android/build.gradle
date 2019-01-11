@@ -1,0 +1,35 @@
+group 'com.flutter_webview_plugin'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+
+    defaultConfig {
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        // NOTE(jeffmikels): When targetSdkVersion or minSdkVersion is not set or < 4, gradle adds 
+        // additional scary permissions such as WRITE_EXTERNAL_STORAGE and READ_PHONE_STATE.
+        minSdkVersion 16
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
