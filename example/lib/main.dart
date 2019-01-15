@@ -174,8 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
 
-    _onWebviewMessaged =
-        flutterWebViewPlugin.onWebviewMessage.listen((String message) {
+    _onWebviewMessaged = flutterWebViewPlugin.onWebviewMessage.listen((String message) {
       print(message);
     });
   }
@@ -251,6 +250,11 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(24.0),
               child: TextField(controller: _codeCtrl),
             ),
+//            TextField(
+//              decoration: InputDecoration(
+//                hintText: 'input something...',
+//              ),
+//            ),
             RaisedButton(
               onPressed: () {
                 flutterWebViewPlugin.postMessage('hello from flutter');

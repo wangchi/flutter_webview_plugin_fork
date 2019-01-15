@@ -21,6 +21,8 @@ class _PostViewState extends State<PostView> {
   final flutterWebViewPlugin = FlutterWebviewPlugin();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  StreamSubscription<String> _onWebviewMessaged;
+
   String htmlContent = '<h1>hello</h1>';
   var selectedUrl = 'https://www.baidu.com';
 
@@ -52,7 +54,7 @@ class _PostViewState extends State<PostView> {
       }
     });
 
-    flutterWebViewPlugin.onWebviewMessage.listen((data) {
+    _onWebviewMessaged = flutterWebViewPlugin.onWebviewMessage.listen((data) {
       print('---- ++++ -----');
       print(data);
       if (data.toString().indexOf('updateTitle') != -1) {
@@ -79,6 +81,7 @@ class _PostViewState extends State<PostView> {
 
   @override
   void dispose() {
+    _onWebviewMessaged.cancel();
     flutterWebViewPlugin.dispose();
     super.dispose();
   }
@@ -89,6 +92,9 @@ class _PostViewState extends State<PostView> {
 
     print('++++++++ render');
 //    flutterWebViewPlugin.show();
+
+    var viewInsetsBottom = MediaQuery.of(context).viewInsets.bottom;
+    print(viewInsetsBottom);
 
     return WebviewScaffold(
 //      url: selectedUrl,
@@ -105,35 +111,50 @@ class _PostViewState extends State<PostView> {
           child: Text('Waiting.....'),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                flutterWebViewPlugin.goBack();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.arrow_forward_ios),
-              onPressed: () {
-                flutterWebViewPlugin.goForward();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.autorenew),
-              onPressed: () {
-                flutterWebViewPlugin.reload();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.plus_one),
-              onPressed: () {
-                flutterWebViewPlugin.postMessage('hello from flutter');
-              },
-            ),
-          ],
-        ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: viewInsetsBottom),
+        width: double.infinity,
+        height: 44.0 + viewInsetsBottom,
+        color: Colors.black12,
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: 'input something...'
+          ),
+        )
+      ),
+//      bottomNavigationBar: bottomButtons(),
+    );
+  }
+
+  Widget bottomButtons() {
+    return BottomAppBar(
+      child: Row(
+        children: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              flutterWebViewPlugin.goBack();
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.arrow_forward_ios),
+            onPressed: () {
+              flutterWebViewPlugin.goForward();
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.autorenew),
+            onPressed: () {
+              flutterWebViewPlugin.reload();
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.plus_one),
+            onPressed: () {
+              flutterWebViewPlugin.postMessage('hello from flutter');
+            },
+          ),
+        ],
       ),
     );
   }
